@@ -21,7 +21,7 @@ source_image = cv2.imread(argv[1])
 source_image = cv2.resize(source_image, (256, 256))
 source_image = source_image.astype(np.float32) / 255.0
 
-generator, kp_detector = load_checkpoints(config_path='config/vox-256.yaml', checkpoint_path=checkpoint_path, cpu=cpu)
+generator, kp_detector = load_checkpoints(config_path=os.path.join(os.path.dirname(__file__), 'config/vox-256.yaml'), checkpoint_path=checkpoint_path, cpu=cpu)
 
 output_folder = 'result'
 
@@ -31,7 +31,7 @@ if not os.path.exists(output_folder):
 relative=True
 adapt_movement_scale=True
 
-paths = glob.glob('driving_images/*.png')
+paths = glob.glob(os.path.join(os.path.dirname(__file__), 'driving_images/*.png'))
 
 with torch.no_grad() :
     predictions = []
