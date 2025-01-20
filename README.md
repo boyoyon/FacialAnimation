@@ -50,6 +50,7 @@
             　qキーを何回か押すと画像生成を中断できます。<br>
             <br>
             <h3>gifアニメーション化</h3>
+            　imageio がインストールされていない場合は、pip install imageio<br>
             　python images_to_gif.py result\*.png (FPS) (ループ回数)<br>
             　output.gif が出力されます。<br>
             　ループ回数に0を指定すると無限にループします。<br>
