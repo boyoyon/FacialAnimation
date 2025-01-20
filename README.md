@@ -31,15 +31,6 @@
             　python create_driving_images.py <br>
             　でフォルダの作成～画像の切り出しが実行される。<br>
             <br>
-            　src<br>
-            　┣ create_driving_images.py<br>
-            　┣ facial_animation.py<br>
-            　┣ config<br>
-            　┣ Inputs<br>
-            　┣ modules<br>
-             　:　<br>
-            　┣ vox-cpk.pth.tar<br>
-
             <h3>[4] ライブラリをインストールする</h3>
             　・PyTorchをインストールする<br>
             　　手持ちのGPUの都合でv1.13.0でしか試しておりません。<br>
