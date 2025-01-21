@@ -23,6 +23,8 @@
             　Real_Time_Image_Animation.zip を解凍し、Real_Time_Image_Animation フォルダ内のファイル、フォルダを src フォルダの下に配置する。<br>
             <br>
             <h3>[2] 学習済モデルパラメータをダウンロード～配置する</h3>
+            　<a href="https://drive.google.com/drive/folders/1PyQJmkdCsAkOYwUyaj_l-l0as-iLDgeH">first-order-model-checkpoints</a><br>
+            　または<br>
             　<a href="https://disk.yandex.ru/d/lEw8uRm140L_eQ">https://disk.yandex.ru/d/lEw8uRm140L_eQ</a><br>
             　から vox-cpk.pth.tar をダウンロードし、srcフォルダの下に配置する。<br>
             <br>
