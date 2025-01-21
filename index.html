@@ -31,6 +31,8 @@
             　Real_Time_Image_Animation.zip を解凍し、Real_Time_Image_Animation フォルダ内のファイル、フォルダを src フォルダの下に配置する。<br>
             <br>
             <h3>[2] 学習済モデルパラメータをダウンロード～配置する</h3>
+            　<a href="https://drive.google.com/drive/folders/1PyQJmkdCsAkOYwUyaj_l-l0as-iLDgeH">first-order-model-checkpoints</a><br>
+            　または<br>
             　<a href="https://disk.yandex.ru/d/lEw8uRm140L_eQ">https://disk.yandex.ru/d/lEw8uRm140L_eQ</a><br>
             　から vox-cpk.pth.tar をダウンロードし、srcフォルダの下に配置する。<br>
             <br>
@@ -40,15 +42,6 @@
             　python create_driving_images.py <br>
             　でフォルダの作成～画像の切り出しが実行される。<br>
             <br>
-            　src<br>
-            　┣ create_driving_images.py<br>
-            　┣ facial_animation.py<br>
-            　┣ config<br>
-            　┣ Inputs<br>
-            　┣ modules<br>
-             　:　<br>
-            　┣ vox-cpk.pth.tar<br>
-
             <h3>[4] ライブラリをインストールする</h3>
             　・PyTorchをインストールする<br>
             　　手持ちのGPUの都合でv1.13.0でしか試しておりません。<br>
@@ -68,6 +61,7 @@
             　qキーを何回か押すと画像生成を中断できます。<br>
             <br>
             <h3>gifアニメーション化</h3>
+            　imageio がインストールされていない場合は、pip install imageio<br>
             　python images_to_gif.py result\*.png (FPS) (ループ回数)<br>
             　output.gif が出力されます。<br>
             　ループ回数に0を指定すると無限にループします。<br>
