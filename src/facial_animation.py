@@ -18,7 +18,15 @@ if argc < 2:
     quit()
 
 source_image = cv2.imread(argv[1])
-source_image = cv2.resize(source_image, (256, 256))
+H, W = source_image.shape[:2]
+size = np.max((H, W))
+tmp = np.zeros((size, size, 3), np.uint8)
+left = (size - W) // 2
+right = left + W
+top = (size - H) // 2
+bottom = top + H
+tmp[top:bottom, left:right, :] = source_image
+source_image = cv2.resize(tmp, (256, 256))
 source_image = source_image.astype(np.float32) / 255.0
 
 generator, kp_detector = load_checkpoints(config_path=os.path.join(os.path.dirname(__file__), 'config/vox-256.yaml'), checkpoint_path=checkpoint_path, cpu=cpu)
@@ -45,7 +53,6 @@ with torch.no_grad() :
     for path in paths:
         
         frame = cv2.imread(path)
-        frame = cv2.flip(frame,1)
         frame = frame.astype(np.float32) / 255.0
             
         if count == 1:
