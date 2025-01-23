@@ -19,6 +19,8 @@ if argc < 3:
 
 source_image = cv2.imread(argv[1])
 source_image = cv2.resize(source_image, (256, 256))
+cv2.imshow('source', source_image)
+
 source_image = source_image.astype(np.float32) / 255.0
 
 generator, kp_detector = load_checkpoints(config_path=os.path.join(os.path.dirname(__file__), 'config/vox-256.yaml'), checkpoint_path=checkpoint_path, cpu=cpu)
@@ -46,6 +48,13 @@ with torch.no_grad() :
     while ret:
        
         ret, frame = cap.read()
+        if not ret:
+            print('failed to capture image')
+            key = cv2.waitKey(10)
+            if key != -1:
+                break
+            continue
+
         frame = cv2.resize(frame, (256, 256))
         frame = frame.astype(np.float32) / 255.0
             
@@ -70,18 +79,14 @@ with torch.no_grad() :
                             adapt_movement_scale=adapt_movement_scale)
         
         out = generator(source, kp_source=kp_source, kp_driving=kp_norm)
-        
-        predictions.append(np.transpose(out['prediction'].data.cpu().numpy(), [0, 2, 3, 1])[0])
-        
+
         im = np.transpose(out['prediction'].data.cpu().numpy(), [0, 2, 3, 1])[0]
-        im = cv2.cvtColor(im,cv2.COLOR_RGB2BGR)
+        predictions.append(im)
         
-        img = cv2.cvtColor(im, cv2.COLOR_RGB2BGR) 
-        
-        cv2.imshow('Facial Expression',img)
+        cv2.imshow('Facial Expression',im)
 
         dst_path = os.path.join(output_folder, '%04d.png' % count)
-        dst = img * 255
+        dst = im * 255
         dst = np.clip(dst, 0, 255)
         dst = dst.astype(np.uint8)
         cv2.imwrite(dst_path, dst)
