@@ -18,7 +18,15 @@ if argc < 3:
     quit()
 
 source_image = cv2.imread(argv[1])
-source_image = cv2.resize(source_image, (256, 256))
+H, W = source_image.shape[:2]
+size = np.max((H, W))
+tmp = np.zeros((size, size, 3), np.uint8)
+left = (H - W) // 2
+right = left + W
+top = (size - H) // 2
+bottom = top + H
+tmp[top:bottom, left:right, :] = source_image
+source_image = cv2.resize(tmp, (256, 256))
 cv2.imshow('source', source_image)
 
 source_image = source_image.astype(np.float32) / 255.0
