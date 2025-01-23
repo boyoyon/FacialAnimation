@@ -12,16 +12,18 @@ argv = sys.argv
 argc = len(argv)
 
 print('%s changing facial expression of the face within the image' % argv[0])
-print('[usage] python %s <face image>' % argv[0])
+print('[usage] python %s <face image> <drive video>' % argv[0])
 
-if argc < 2:
+if argc < 3:
     quit()
 
 source_image = cv2.imread(argv[1])
 source_image = cv2.resize(source_image, (256, 256))
+cv2.imshow('source', source_image)
+
 source_image = source_image.astype(np.float32) / 255.0
 
-generator, kp_detector = load_checkpoints(config_path='config/vox-256.yaml', checkpoint_path=checkpoint_path, cpu=cpu)
+generator, kp_detector = load_checkpoints(config_path=os.path.join(os.path.dirname(__file__), 'config/vox-256.yaml'), checkpoint_path=checkpoint_path, cpu=cpu)
 
 output_folder = 'result'
 
@@ -31,7 +33,7 @@ if not os.path.exists(output_folder):
 relative=True
 adapt_movement_scale=True
 
-paths = glob.glob('driving_images/*.png')
+cap = cv2.VideoCapture(argv[2])
 
 with torch.no_grad() :
     predictions = []
@@ -42,10 +44,18 @@ with torch.no_grad() :
     kp_source = kp_detector(source)
     count = 1
 
-    for path in paths:
-        
-        frame = cv2.imread(path)
-        frame = cv2.flip(frame,1)
+    ret = True
+    while ret:
+       
+        ret, frame = cap.read()
+        if not ret:
+            print('failed to capture image')
+            key = cv2.waitKey(10)
+            if key != -1:
+                break
+            continue
+
+        frame = cv2.resize(frame, (256, 256))
         frame = frame.astype(np.float32) / 255.0
             
         if count == 1:
@@ -69,7 +79,7 @@ with torch.no_grad() :
                             adapt_movement_scale=adapt_movement_scale)
         
         out = generator(source, kp_source=kp_source, kp_driving=kp_norm)
-        
+
         im = np.transpose(out['prediction'].data.cpu().numpy(), [0, 2, 3, 1])[0]
         predictions.append(im)
         

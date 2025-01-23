@@ -4,6 +4,8 @@ from _demo import load_checkpoints
 import numpy as np
 import cv2, glob, os, sys
 
+LIMIT_NR_FRAMES = 1000 # フレーム数の制限を無効にしたい場合は負数を設定してください
+
 cpu = False if torch.cuda.is_available() else True
 
 checkpoint_path = os.path.join(os.path.dirname(__file__), 'vox-cpk.pth.tar')
@@ -19,9 +21,12 @@ if argc < 2:
 
 source_image = cv2.imread(argv[1])
 source_image = cv2.resize(source_image, (256, 256))
+
+cv2.imshow('source', source_image)
+
 source_image = source_image.astype(np.float32) / 255.0
 
-generator, kp_detector = load_checkpoints(config_path='config/vox-256.yaml', checkpoint_path=checkpoint_path, cpu=cpu)
+generator, kp_detector = load_checkpoints(config_path=os.path.join(os.path.dirname(__file__), 'config/vox-256.yaml'), checkpoint_path=checkpoint_path, cpu=cpu)
 
 output_folder = 'result'
 
@@ -31,7 +36,7 @@ if not os.path.exists(output_folder):
 relative=True
 adapt_movement_scale=True
 
-paths = glob.glob('driving_images/*.png')
+cap = cv2.VideoCapture(0)
 
 with torch.no_grad() :
     predictions = []
@@ -42,10 +47,18 @@ with torch.no_grad() :
     kp_source = kp_detector(source)
     count = 1
 
-    for path in paths:
-        
-        frame = cv2.imread(path)
-        frame = cv2.flip(frame,1)
+    while True:
+       
+        ret, frame = cap.read()
+        if not ret:
+            print('failed to capture. Hit any key to terminate.')
+            key = cv2.waitKey(10)
+            if key != -1:
+                break
+
+            continue
+
+        frame = cv2.resize(frame, (256, 256))
         frame = frame.astype(np.float32) / 255.0
             
         if count == 1:
@@ -70,6 +83,7 @@ with torch.no_grad() :
         
         out = generator(source, kp_source=kp_source, kp_driving=kp_norm)
         
+
         im = np.transpose(out['prediction'].data.cpu().numpy(), [0, 2, 3, 1])[0]
         predictions.append(im)
         
@@ -84,7 +98,11 @@ with torch.no_grad() :
 
         count += 1
         
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if LIMIT_NR_FRAMES >= 0 and count >= LIMIT_NR_FRAMES:
+            print('abort because reaching capture frame limit (%d)' % LIMIT_NR_FRAMES)
+            break
+        
+        if cv2.waitKey(1) != -1:
             break
         
     cv2.destroyAllWindows()
