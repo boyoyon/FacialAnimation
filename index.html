@@ -70,5 +70,23 @@
             　python images_to_mp4.py result\*.png<br>
             　output.mp4 が出力されます。<br> 
         </p>
+        <h2>その他</h2>
+        <h3>Thin Plate Spline</h3>
+        <p>
+            <a href="https://github.com/yoyo-nb/Thin-Plate-Spline-Motion-Model">Thin-Plate-Spline-Motion-Model</a><br>
+            Code → Download ZIP<br>
+            <br>
+            Thin-Plate-Spline-Motion-Model-main.zip を解凍する<br>
+            <br>
+            <a href="https://disk.yandex.com/d/bWopgbGj1ZUV1w">事前学習済モデル</a> から vox.pth.tar をダウンロード。<br>
+            Thin-Plate-Spline-Motion-Model-main\checkpoints フォルダを作り、その下に vox.pth.tar を配置する。<br>
+            <br>
+            pip install -r requirements.txt を実行する。<br>
+            <br>
+            python demo.py --config ./config/vox-256.yaml --source_image (画像ファイル)<br>
+            <br>
+            結果<br>
+            <img src="images/result_thin_plate_spline.gif">
+        </p>
     </body>
 </html>
