@@ -77,6 +77,8 @@
             <br>
             python demo.py --config ./config/vox-256.yaml --source_image (画像ファイル)<br>
             <br>
+            結果<br>
+            <img src="images/result_thin_plate_spline.gif">
         </p>
     </body>
 </html>
